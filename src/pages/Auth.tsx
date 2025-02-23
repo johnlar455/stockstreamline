@@ -90,7 +90,7 @@ export default function Auth() {
             <Button
               type="button"
               variant="link"
-              className="w-full"
+              className="w-full text-black hover:text-black/80"
               onClick={() => setIsSignUp(!isSignUp)}
             >
               {isSignUp 
