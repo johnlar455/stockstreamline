@@ -43,11 +43,11 @@ const Dashboard = () => {
         <p className="text-gray-500 mt-2">Welcome to your inventory overview</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {statsCards.map((card, index) => {
           const Icon = card.icon;
           return (
-            <Card key={index} className="glass-card">
+            <Card key={index} className="glass-card hover:shadow-lg transition-shadow duration-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-gray-600">
                   {card.title}
@@ -68,7 +68,7 @@ const Dashboard = () => {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <Card className="glass-card">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>

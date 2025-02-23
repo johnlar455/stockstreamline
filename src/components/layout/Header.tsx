@@ -1,13 +1,25 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Menu } from 'lucide-react';
 
-const Header = () => {
+interface HeaderProps {
+  onMenuClick: () => void;
+}
+
+const Header = ({ onMenuClick }: HeaderProps) => {
   return (
-    <header className="h-16 fixed top-0 right-0 left-64 bg-white border-b border-gray-200 px-6 flex items-center justify-between z-10">
-      <div className="flex items-center flex-1 max-w-xl">
-        <div className="relative w-full">
+    <header className="h-16 fixed top-0 right-0 left-0 md:left-64 bg-white border-b border-gray-200 px-4 md:px-6 flex items-center justify-between z-20 transition-all duration-300">
+      <div className="flex items-center space-x-4">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="md:hidden"
+          onClick={onMenuClick}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+        <div className="relative flex-1 max-w-xl hidden md:block">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
