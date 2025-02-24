@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
 import { 
@@ -10,10 +9,11 @@ import {
   PlusCircle,
   Download,
 } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ProductModal } from '@/components/products/ProductModal';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from '@/components/ui/button';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { ChartCard } from '@/components/dashboard/ChartCard';
@@ -26,6 +26,18 @@ const Dashboard = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { stockSummary, stockTrend, products } = useDashboardData();
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('name');
+      
+      if (error) throw error;
+      return data;
+    }
+  });
 
   const handleExportReport = () => {
     const headers = ['Name', 'SKU', 'Current Stock', 'Minimum Stock'];
@@ -213,9 +225,12 @@ const Dashboard = () => {
           setSelectedProduct(null);
         }}
         product={selectedProduct}
+        categories={categories || []}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['products'] });
           queryClient.invalidateQueries({ queryKey: ['stockSummary'] });
+          setIsProductModalOpen(false);
+          setSelectedProduct(null);
         }}
       />
     </div>
