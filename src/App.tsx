@@ -22,7 +22,11 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-lg">Loading...</div>
+      </div>
+    );
   }
   
   if (!user) {
@@ -33,6 +37,22 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppRoutes() {
+  const { user, isLoading } = useAuth();
+
+  // Show loading state while checking auth
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  // If on auth page and already logged in, redirect to dashboard
+  if (user && window.location.pathname === '/auth') {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
