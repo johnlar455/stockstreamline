@@ -33,6 +33,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          created_at: string | null
+          id: string
+          low_stock_app: boolean | null
+          low_stock_email: boolean | null
+          supplier_updates_app: boolean | null
+          supplier_updates_email: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          low_stock_app?: boolean | null
+          low_stock_email?: boolean | null
+          supplier_updates_app?: boolean | null
+          supplier_updates_email?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          low_stock_app?: boolean | null
+          low_stock_email?: boolean | null
+          supplier_updates_app?: boolean | null
+          supplier_updates_email?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       product_suppliers: {
         Row: {
           lead_time_days: number | null
