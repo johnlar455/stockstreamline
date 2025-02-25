@@ -16,16 +16,23 @@ interface SupplierModalProps {
   onSuccess: () => void;
 }
 
+// Type that ensures name is required while other fields are optional
+type SupplierFormData = {
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  notes?: string | null;
+}
+
 export function SupplierModal({ isOpen, onClose, supplier, onSuccess }: SupplierModalProps) {
-  const [formData, setFormData] = useState<Partial<Supplier>>(
-    supplier || {
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      notes: "",
-    }
-  );
+  const [formData, setFormData] = useState<SupplierFormData>({
+    name: supplier?.name || "",
+    email: supplier?.email || "",
+    phone: supplier?.phone || "",
+    address: supplier?.address || "",
+    notes: supplier?.notes || "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -42,7 +49,9 @@ export function SupplierModal({ isOpen, onClose, supplier, onSuccess }: Supplier
           .eq("id", supplier.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("suppliers").insert([formData]);
+        const { error } = await supabase
+          .from("suppliers")
+          .insert(formData); // Now formData always has required name field
         if (error) throw error;
       }
 
@@ -70,7 +79,7 @@ export function SupplierModal({ isOpen, onClose, supplier, onSuccess }: Supplier
             <Label htmlFor="name">Name *</Label>
             <Input
               id="name"
-              value={formData.name || ""}
+              value={formData.name}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, name: e.target.value }))
               }
