@@ -17,18 +17,43 @@ export function UserManagement() {
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const { data: users, error } = await supabase
+      // First get profiles with user_roles
+      const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select(`
           id,
           first_name,
-          last_name,
-          user_roles (
-            role
-          )
+          last_name
         `);
-      if (error) throw error;
-      return users as UserWithRole[];
+      
+      if (profilesError) throw profilesError;
+      
+      // Get roles for each user
+      const usersWithRoles: UserWithRole[] = [];
+      
+      for (const profile of profilesData) {
+        const { data: rolesData, error: rolesError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', profile.id);
+          
+        if (rolesError) throw rolesError;
+        
+        // Transform data to match UserWithRole type
+        usersWithRoles.push({
+          id: profile.id,
+          email: '', // Email not accessible through profiles
+          profile: {
+            id: profile.id,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+            updated_at: ''
+          },
+          roles: rolesData.map(r => r.role)
+        });
+      }
+      
+      return usersWithRoles;
     },
   });
 
@@ -75,7 +100,7 @@ export function UserManagement() {
               {users?.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>
-                    {user.first_name} {user.last_name}
+                    {user.profile.first_name} {user.profile.last_name}
                   </TableCell>
                   <TableCell>
                     {user.roles?.map(role => (
